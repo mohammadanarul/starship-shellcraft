@@ -3,16 +3,25 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 VERSION="$(cat "$ROOT/VERSION")"
+NAME="starship-shellcraft"
 
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
+
+STAGE="$WORK/${NAME}-${VERSION}"
+
+mkdir -p "$STAGE"
 
 cp -a \
   "$ROOT/lib" \
   "$ROOT/themes" \
   "$ROOT/VERSION" \
   "$ROOT/shellcraft" \
-  "$WORK/"
+  "$STAGE/"
+
+tar -C "$WORK" \
+  -czf "$WORK/${NAME}-${VERSION}.tar.gz" \
+  "${NAME}-${VERSION}"
 
 cat > "$WORK/PKGBUILD" <<EOF
 # Maintainer: Starship Shellcraft contributors
@@ -34,8 +43,11 @@ depends=(
   'bash-completion'
 )
 
-source=()
-sha256sums=()
+source=(
+  "starship-shellcraft-\${pkgver}.tar.gz"
+)
+
+sha256sums=('SKIP')
 
 package() {
 
@@ -43,19 +55,19 @@ package() {
     "\$pkgdir/usr/share/starship-shellcraft"
 
   cp -a \
-    "\$srcdir/lib" \
+    "\$srcdir/starship-shellcraft-\${pkgver}/lib" \
     "\$pkgdir/usr/share/starship-shellcraft/"
 
   cp -a \
-    "\$srcdir/themes" \
+    "\$srcdir/starship-shellcraft-\${pkgver}/themes" \
     "\$pkgdir/usr/share/starship-shellcraft/"
 
   install -Dm644 \
-    "\$srcdir/VERSION" \
+    "\$srcdir/starship-shellcraft-\${pkgver}/VERSION" \
     "\$pkgdir/usr/share/starship-shellcraft/VERSION"
 
   install -Dm755 \
-    "\$srcdir/shellcraft" \
+    "\$srcdir/starship-shellcraft-\${pkgver}/shellcraft" \
     "\$pkgdir/usr/share/starship-shellcraft/shellcraft"
 
   install -dm755 \
@@ -87,14 +99,15 @@ EOF
 
 if command -v makepkg >/dev/null 2>&1; then
 
-    # Arch Linux does not allow makepkg as root.
     if [[ "$(id -u)" -eq 0 ]]; then
 
-        useradd \
-          -m \
-          -u 1000 \
-          -s /bin/bash \
-          shellcraft-builder
+        if ! id shellcraft-builder >/dev/null 2>&1; then
+            useradd \
+              -m \
+              -u 1000 \
+              -s /bin/bash \
+              shellcraft-builder
+        fi
 
         chown -R \
           shellcraft-builder:shellcraft-builder \
@@ -117,6 +130,8 @@ if command -v makepkg >/dev/null 2>&1; then
     fi
 
     cp "$WORK"/*.pkg.tar.* "$ROOT/"
+
+    echo "Built Arch package successfully."
 
 else
 

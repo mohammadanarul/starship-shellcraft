@@ -17,8 +17,11 @@ depends=(
   'bash-completion'
 )
 
-source=()
-sha256sums=()
+source=(
+  "starship-shellcraft-${pkgver}.tar.gz"
+)
+
+sha256sums=('SKIP')
 
 package() {
 
@@ -26,19 +29,19 @@ package() {
     "$pkgdir/usr/share/starship-shellcraft"
 
   cp -a \
-    "$srcdir/lib" \
+    "$srcdir/starship-shellcraft-${pkgver}/lib" \
     "$pkgdir/usr/share/starship-shellcraft/"
 
   cp -a \
-    "$srcdir/themes" \
+    "$srcdir/starship-shellcraft-${pkgver}/themes" \
     "$pkgdir/usr/share/starship-shellcraft/"
 
   install -Dm644 \
-    "$srcdir/VERSION" \
+    "$srcdir/starship-shellcraft-${pkgver}/VERSION" \
     "$pkgdir/usr/share/starship-shellcraft/VERSION"
 
   install -Dm755 \
-    "$srcdir/shellcraft" \
+    "$srcdir/starship-shellcraft-${pkgver}/shellcraft" \
     "$pkgdir/usr/share/starship-shellcraft/shellcraft"
 
   install -dm755 \
