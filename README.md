@@ -75,10 +75,8 @@ A generic `.tar.gz` package is also provided for systems where a native package 
 The easiest way to install Shellcraft:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/starship-shellcraft/main/install.sh | bash
+curl -fsSL https://github.com/mohammadanarul/starship-shellcraft/main/install.sh | bash
 ```
-
-> Replace `YOUR_USERNAME` with the GitHub username that owns the repository.
 
 The installer automatically detects the Linux distribution and uses:
 
@@ -752,7 +750,7 @@ GitHub Release
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/starship-shellcraft.git
+git clone https://github.com/mohammadanarul/starship-shellcraft.git
 cd starship-shellcraft
 ```
 
