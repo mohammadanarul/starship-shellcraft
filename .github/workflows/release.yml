@@ -70,7 +70,11 @@ jobs:
           pacman -Sy \
             --noconfirm \
             --needed \
-            base-devel
+            base-devel \
+            git \
+            fzf \
+            bash-completion \
+            curl
 
       - name: Build Arch package
         run: |

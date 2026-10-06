@@ -14,7 +14,12 @@ mkdir -p "$TOP"/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 STAGE="$TOP/${NAME}-${VERSION}"
 mkdir -p "$STAGE"
 
-cp -a "$ROOT/lib" "$ROOT/themes" "$ROOT/VERSION" "$ROOT/shellcraft" "$STAGE/"
+cp -a \
+  "$ROOT/lib" \
+  "$ROOT/themes" \
+  "$ROOT/VERSION" \
+  "$ROOT/shellcraft" \
+  "$STAGE/"
 
 tar -C "$TOP" \
   -czf "$TOP/SOURCES/${NAME}-${VERSION}.tar.gz" \
@@ -56,13 +61,13 @@ set -euo pipefail
 
 SC_ROOT="/usr/share/starship-shellcraft"
 
-source "$SC_ROOT/lib/common.sh"
-source "$SC_ROOT/lib/detect.sh"
-source "$SC_ROOT/lib/packages.sh"
-source "$SC_ROOT/lib/theme.sh"
-source "$SC_ROOT/lib/runtime.sh"
+source "\$SC_ROOT/lib/common.sh"
+source "\$SC_ROOT/lib/detect.sh"
+source "\$SC_ROOT/lib/packages.sh"
+source "\$SC_ROOT/lib/theme.sh"
+source "\$SC_ROOT/lib/runtime.sh"
 
-main "$@"
+main "\$@"
 LAUNCHER
 
 chmod 0755 %{buildroot}/usr/bin/starship-shellcraft
