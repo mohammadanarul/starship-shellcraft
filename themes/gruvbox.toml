@@ -1,0 +1,10 @@
+format = "$directory$git_branch$git_status$character"
+[directory]
+style = "bold yellow"
+[git_branch]
+style = "bold cyan"
+[git_status]
+style = "bold red"
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"

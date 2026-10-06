@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SC_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SC_ROOT/lib/common.sh" ]]; then
+  source "$SC_ROOT/lib/common.sh"
+  source "$SC_ROOT/lib/detect.sh"
+  source "$SC_ROOT/lib/packages.sh"
+  source "$SC_ROOT/lib/theme.sh"
+  source "$SC_ROOT/lib/runtime.sh"
+else
+  echo "starship-shellcraft: installation is incomplete." >&2
+  exit 1
+fi
+
+main "$@"
