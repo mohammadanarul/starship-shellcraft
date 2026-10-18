@@ -4,7 +4,7 @@
 
 Starship Shellcraft transforms a normal Bash terminal into a modern, productive and customizable shell environment powered by **Starship**, **ble.sh**, **bash-completion**, **fzf** and **zoxide**.
 
-![Version](https://img.shields.io/badge/version-v1.2.0-blue)
+![Version](https://img.shields.io/badge/version-v1.3.0-blue)
 ![Linux](https://img.shields.io/badge/Linux-Supported-success)
 ![WSL](https://img.shields.io/badge/WSL-Supported-success)
 ![APT](https://img.shields.io/badge/APT-Supported-success)
@@ -98,7 +98,7 @@ GitHub Releases provide native packages for supported Linux distributions.
 Download the `.deb` package:
 
 ```bash
-sudo dpkg -i starship-shellcraft_1.2.0_all.deb
+sudo dpkg -i starship-shellcraft_1.3.0_all.deb
 ```
 
 Then configure the current user:
@@ -126,7 +126,7 @@ sudo apt-get install -f
 Download the `.rpm` package:
 
 ```bash
-sudo dnf install ./starship-shellcraft-1.2.0-1.noarch.rpm
+sudo dnf install ./starship-shellcraft-1.3.0-1.noarch.rpm
 ```
 
 Then:
@@ -142,7 +142,7 @@ ssc install
 The RPM package can also be installed using Zypper:
 
 ```bash
-sudo zypper install ./starship-shellcraft-1.2.0-1.noarch.rpm
+sudo zypper install ./starship-shellcraft-1.3.0-1.noarch.rpm
 ```
 
 Then:
@@ -158,7 +158,7 @@ ssc install
 Download the Arch package:
 
 ```bash
-sudo pacman -U starship-shellcraft-1.2.0-1-any.pkg.tar.zst
+sudo pacman -U starship-shellcraft-1.3.0-1-any.pkg.tar.zst
 ```
 
 Then:
@@ -173,35 +173,29 @@ ssc install
 
 Starship Shellcraft is designed to work with Windows Subsystem for Linux.
 
-When running inside WSL, Shellcraft automatically detects the Windows username.
-
-For example:
-
-```text
-Windows user:
-mdana
-
-Detected startup path:
-/mnt/c/Users/mdana
-```
-
-No username is hard-coded.
-
-Shellcraft checks whether the detected Windows directory exists.
-
-If it does:
+When running inside WSL, Shellcraft detects your Windows username and shows
+your Windows home in `ssc info`:
 
 ```text
-/mnt/c/Users/<detected-user>
+Default path       : /home/<linux-user>
+Windows home       : /mnt/c/Users/<windows-user>
 ```
 
-is used as the default startup path.
+The default path is always your **Linux home** (`~`).
 
-If it does not exist, Shellcraft safely falls back to:
+> ⚠️ Work inside `~`, not `/mnt/c`. The Windows drive is very slow from WSL,
+> which makes Starship and git time out (`Scanning current directory timed out`).
+> All Shellcraft themes set `scan_timeout = 500` to reduce this, but `~` is much faster.
+
+To make Windows Terminal open WSL in your Linux home, set the profile's
+**Starting directory** to:
 
 ```text
-$HOME
+~
 ```
+
+(Windows Terminal → Settings → your distro profile → Starting directory, or
+`"startingDirectory": "~"` in `settings.json`.)
 
 ---
 
@@ -261,16 +255,32 @@ ssc theme reset
 
 ## 🎨 Built-in Themes
 
-Shellcraft currently includes:
+| Theme | Style | Font |
+|---|---|---|
+| `tokyo-night` (default) | Powerline | Nerd Font |
+| `nord` | Powerline | Nerd Font |
+| `dracula` | Powerline | Nerd Font |
+| `gruvbox` | Powerline | Nerd Font |
+| `catppuccin-mocha` | Powerline | Nerd Font |
+| `minimal` | Plain text | Any font |
 
-```text
-Tokyo Night
-Nord
-Dracula
-Gruvbox
-Catppuccin Mocha
-Minimal
+Powerline themes show: OS logo, user, folder, git branch/status,
+Node/Python/Rust/Go/PHP/Java/Docker versions, command duration and time.
+
+No Nerd Font? Use:
+
+```bash
+ssc theme set minimal
 ```
+
+You can pick a theme by name or number:
+
+```bash
+ssc theme set 6
+```
+
+If you already had your own `~/.config/starship.toml`, Shellcraft saves a
+backup (`starship.toml.bak.<date>`) before replacing it.
 
 Theme files are stored in:
 
@@ -338,7 +348,7 @@ Example:
 Starship Shellcraft
 ===================
 
-Version            : 1.2.0
+Version            : 1.3.0
 OS                 : Ubuntu 24.04 LTS
 Package manager    : apt
 Architecture       : x86_64
@@ -579,22 +589,22 @@ Starship configuration:
 
 # 🔤 Nerd Font
 
-For the best terminal icons, install:
+The powerline themes use Nerd Font icons. Install a Nerd Font (for example
+**FiraCode Nerd Font**) and select it in your terminal.
 
-**FiraCode Nerd Font**
+- **WSL:** install the font on **Windows** and select it in Windows Terminal.
+  Installing it inside Linux does nothing for Windows Terminal.
+- **Native Linux:** install it in `~/.local/share/fonts` and select it in your terminal.
 
-on Windows and select it in Windows Terminal.
+Download: https://www.nerdfonts.com/font-downloads
 
-Shellcraft does not attempt to install Windows fonts from inside Linux/WSL.
-
-For WSL users:
+Shellcraft does not install fonts. Without a Nerd Font, icons show as `□`,
+so use the `minimal` theme.
 
 ```text
 Windows
    ↓
-Windows Terminal
-   ↓
-FiraCode Nerd Font
+Windows Terminal  (FiraCode Nerd Font)
    ↓
 WSL Bash
    ↓
@@ -689,7 +699,7 @@ Shellcraft uses semantic versioning:
 ```text
 v1.0.0
 v1.1.0
-v1.2.0
+v1.3.0
 v1.3.0
 ```
 
@@ -698,20 +708,20 @@ Creating a version tag triggers the GitHub Actions release workflow.
 Example:
 
 ```bash
-git tag -a v1.2.0 -m "Starship Shellcraft v1.2.0"
-git push origin v1.2.0
+git tag -a v1.3.0 -m "Starship Shellcraft v1.3.0"
+git push origin v1.3.0
 ```
 
 GitHub Actions automatically builds:
 
 ```text
-starship-shellcraft_1.2.0_all.deb
+starship-shellcraft_1.3.0_all.deb
 
-starship-shellcraft-1.2.0-1.noarch.rpm
+starship-shellcraft-1.3.0-1.noarch.rpm
 
-starship-shellcraft-1.2.0-1-any.pkg.tar.zst
+starship-shellcraft-1.3.0-1-any.pkg.tar.zst
 
-starship-shellcraft-1.2.0.tar.gz
+starship-shellcraft-1.3.0.tar.gz
 ```
 
 The generated artifacts are automatically attached to the GitHub Release.
@@ -723,7 +733,7 @@ The generated artifacts are automatically attached to the GitHub Release.
 ```text
 Git Tag
   │
-  │ v1.2.0
+  │ v1.3.0
   ▼
 GitHub Actions
   │
@@ -788,7 +798,7 @@ find . -name "*.sh" -print0 |
 Output:
 
 ```text
-starship-shellcraft_1.2.0_all.deb
+starship-shellcraft_1.3.0_all.deb
 ```
 
 ---
@@ -836,7 +846,7 @@ The build uses `makepkg` as a non-root user.
 Output:
 
 ```text
-starship-shellcraft-1.2.0.tar.gz
+starship-shellcraft-1.3.0.tar.gz
 ```
 
 ---

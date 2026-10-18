@@ -1,8 +1,58 @@
-format = "$directory$git_branch$character"
+# Shellcraft theme: Minimal
+# Style: plain text (works with ANY font, no Nerd Font needed)
+"$schema" = "https://starship.rs/config-schema.json"
+
+format = "$username$directory$git_branch$git_status$python$nodejs$rust$golang$cmd_duration$line_break$character"
+
+scan_timeout = 500
+command_timeout = 1000
+add_newline = true
+
+[username]
+show_always = false
+style_user = "bold yellow"
+format = "[$user]($style) in "
+
 [directory]
-style = "bold white"
+style = "bold cyan"
+truncation_length = 3
+truncation_symbol = "…/"
+read_only = " [ro]"
+
 [git_branch]
-style = "bold white"
+symbol = "⎇ "
+style = "bold purple"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold yellow"
+format = "([\\[$all_status$ahead_behind\\]]($style) )"
+
+[python]
+symbol = "py "
+format = "via [$symbol($version )]($style)"
+
+[nodejs]
+symbol = "node "
+format = "via [$symbol($version )]($style)"
+
+[rust]
+symbol = "rs "
+format = "via [$symbol($version )]($style)"
+
+[golang]
+symbol = "go "
+format = "via [$symbol($version )]($style)"
+
+[cmd_duration]
+min_time = 2000
+style = "bold yellow"
+format = "took [$duration]($style) "
+
+[line_break]
+disabled = false
+
 [character]
-success_symbol = "[❯](bold white)"
+success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"

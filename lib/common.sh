@@ -64,7 +64,16 @@ EOF
 
 load_state() {
   SC_THEME="tokyo-night"
-  [[ -f "$SC_STATE_FILE" ]] && source "$SC_STATE_FILE" 2>/dev/null || true
+  if [[ -f "$SC_STATE_FILE" ]]; then
+    local line
+    line="$(grep '^theme=' "$SC_STATE_FILE" 2>/dev/null | tail -n 1 || true)"
+    [[ -n "$line" ]] && SC_THEME="${line#theme=}"
+  fi
+  # If the user replaced starship.toml by hand, don't report a Shellcraft theme
+  if [[ -f "$SC_STARSHIP_CONFIG" ]] &&
+     ! head -n 1 "$SC_STARSHIP_CONFIG" | grep -qF "# starship-shellcraft theme:"; then
+    SC_THEME="custom"
+  fi
 }
 
 is_root() { [[ "${EUID:-$(id -u)}" -eq 0 ]]; }

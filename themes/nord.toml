@@ -1,10 +1,154 @@
-format = "$directory$git_branch$git_status$character"
+# Shellcraft theme: Nord
+# Style: powerline (requires a Nerd Font in your terminal)
+"$schema" = "https://starship.rs/config-schema.json"
+
+format = """
+[░▒▓](os_bg)\
+$os\
+$username\
+[](bg:dir_bg fg:os_bg)\
+$directory\
+[](fg:dir_bg bg:git_bg)\
+$git_branch\
+$git_status\
+[](fg:git_bg bg:lang_bg)\
+$nodejs$python$rust$golang$php$java$docker_context\
+[](fg:lang_bg bg:time_bg)\
+$cmd_duration\
+$time\
+[ ](fg:time_bg)\
+$line_break$character"""
+
+scan_timeout = 500
+command_timeout = 1000
+add_newline = true
+palette = "nord"
+
+[palettes.nord]
+os_bg = "#5e81ac"
+os_fg = "#eceff4"
+dir_bg = "#81a1c1"
+dir_fg = "#2e3440"
+git_bg = "#4c566a"
+git_fg = "#eceff4"
+lang_bg = "#434c5e"
+lang_fg = "#88c0d0"
+time_bg = "#3b4252"
+time_fg = "#d8dee9"
+ok = "#a3be8c"
+err = "#bf616a"
+
+[os]
+disabled = false
+style = "bg:os_bg fg:os_fg"
+format = "[ $symbol]($style)"
+
+[os.symbols]
+Alpine = " "
+AlmaLinux = " "
+Arch = " "
+CentOS = " "
+Debian = " "
+EndeavourOS = " "
+Fedora = " "
+Gentoo = " "
+Kali = " "
+Linux = " "
+Macos = " "
+Manjaro = " "
+Mint = " "
+NixOS = " "
+openSUSE = " "
+SUSE = " "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+RockyLinux = " "
+Ubuntu = " "
+Windows = " "
+Void = " "
+Artix = " "
+Zorin = " "
+Elementary = " "
+Amazon = " "
+Garuda = " "
+CachyOS = " "
+Unknown = " "
+
+[username]
+show_always = true
+style_user = "bg:os_bg fg:os_fg"
+style_root = "bg:os_bg fg:os_fg bold"
+format = "[$user ]($style)"
+
 [directory]
-style = "bold cyan"
+style = "bg:dir_bg fg:dir_fg bold"
+read_only_style = "bg:dir_bg fg:err"
+read_only = " "
+format = "[ $path ]($style)[$read_only]($read_only_style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
 [git_branch]
-style = "bold blue"
+symbol = ""
+style = "bg:git_bg"
+format = "[[ $symbol $branch ](fg:git_fg bg:git_bg)]($style)"
+
 [git_status]
-style = "bold yellow"
+style = "bg:git_bg"
+format = "[[($all_status$ahead_behind )](fg:git_fg bg:git_bg)]($style)"
+
+[nodejs]
+symbol = ""
+style = "bg:lang_bg"
+format = "[[ $symbol( $version) ](fg:lang_fg bg:lang_bg)]($style)"
+
+[python]
+symbol = ""
+style = "bg:lang_bg"
+format = "[[ $symbol( $version) ](fg:lang_fg bg:lang_bg)]($style)"
+
+[rust]
+symbol = ""
+style = "bg:lang_bg"
+format = "[[ $symbol( $version) ](fg:lang_fg bg:lang_bg)]($style)"
+
+[golang]
+symbol = ""
+style = "bg:lang_bg"
+format = "[[ $symbol( $version) ](fg:lang_fg bg:lang_bg)]($style)"
+
+[php]
+symbol = ""
+style = "bg:lang_bg"
+format = "[[ $symbol( $version) ](fg:lang_fg bg:lang_bg)]($style)"
+
+[java]
+symbol = ""
+style = "bg:lang_bg"
+format = "[[ $symbol( $version) ](fg:lang_fg bg:lang_bg)]($style)"
+
+[docker_context]
+symbol = ""
+style = "bg:lang_bg"
+format = "[[ $symbol( $context) ](fg:lang_fg bg:lang_bg)]($style)"
+
+[cmd_duration]
+min_time = 2000
+style = "bg:time_bg"
+format = "[[  $duration ](fg:time_fg bg:time_bg)]($style)"
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:time_bg"
+format = "[[  $time ](fg:time_fg bg:time_bg)]($style)"
+
+[line_break]
+disabled = false
+
 [character]
-success_symbol = "[❯](bold green)"
-error_symbol = "[❯](bold red)"
+success_symbol = "[❯](bold fg:ok)"
+error_symbol = "[❯](bold fg:err)"
+vimcmd_symbol = "[❮](bold fg:ok)"

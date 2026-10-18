@@ -1,7 +1,7 @@
 # Maintainer: Starship Shellcraft contributors
 
 pkgname=starship-shellcraft
-pkgver=1.2.0
+pkgver=1.3.0
 pkgrel=1
 
 pkgdesc="Modern Bash environment powered by Starship"

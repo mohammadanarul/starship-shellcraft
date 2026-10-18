@@ -21,12 +21,15 @@ detect_platform() {
   fi
 
   SC_WINDOWS_USER=""
+  SC_WINDOWS_HOME=""
+  # Always the Linux home: /mnt/c (Windows drive) is very slow from WSL
+  # and makes Starship/git time out.
   SC_DEFAULT_PATH="$HOME"
 
   if [[ "$SC_WSL" == "yes" ]] && command -v powershell.exe >/dev/null 2>&1; then
     SC_WINDOWS_USER="$(powershell.exe -NoProfile -Command '[Environment]::UserName' 2>/dev/null | tr -d '\r\n' || true)"
     if [[ -n "$SC_WINDOWS_USER" && -d "/mnt/c/Users/$SC_WINDOWS_USER" ]]; then
-      SC_DEFAULT_PATH="/mnt/c/Users/$SC_WINDOWS_USER"
+      SC_WINDOWS_HOME="/mnt/c/Users/$SC_WINDOWS_USER"
     fi
   fi
 

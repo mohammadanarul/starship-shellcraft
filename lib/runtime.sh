@@ -66,22 +66,27 @@ $SC_MARK_END"
 
 select_first_theme() {
   load_state
-  if [[ -f "$SC_STARSHIP_CONFIG" ]]; then
+  if [[ -f "$SC_STARSHIP_CONFIG" ]] && ! starship_config_is_managed; then
+    echo
+    warn "Found your own Starship config: $SC_STARSHIP_CONFIG"
     local answer
-    ask answer "Keep current Starship theme? [Y/n]: " "y"
-    if [[ ! "$answer" =~ ^[Nn]$ ]]; then
-      SC_THEME="${SC_THEME:-tokyo-night}"
+    ask answer "Replace it with a Shellcraft theme? (a backup is saved) [Y/n]: " "y"
+    if [[ "$answer" =~ ^[Nn]$ ]]; then
+      SC_THEME="custom"
       save_state
-      ok "Keeping current theme: $SC_THEME"
+      ok "Keeping your own Starship config."
       return
     fi
   fi
 
   echo
   theme_list
+  echo
+  info "[Nerd Font] themes need a Nerd Font in your terminal. No Nerd Font? Pick 'minimal'."
   local chosen
-  ask chosen "Choose theme [tokyo-night]: " "tokyo-night"
-  if [[ ! -f "$SC_THEME_DIR/$chosen.toml" ]]; then
+  ask chosen "Choose theme (name or number) [tokyo-night]: " "tokyo-night"
+  chosen="$(theme_resolve "$chosen")"
+  if [[ -z "$chosen" || ! -f "$SC_THEME_DIR/$chosen.toml" ]]; then
     warn "Invalid theme. Falling back to tokyo-night."
     chosen="tokyo-night"
   fi
@@ -110,6 +115,9 @@ install_cmd() {
   echo
   ok "Installation complete."
   info "Default startup path: $SC_DEFAULT_PATH"
+  if [[ "$SC_WSL" == "yes" ]]; then
+    info "WSL tip: work inside ~ (Linux home), not /mnt/c. /mnt/c is slow for Starship and git."
+  fi
   info "Run: ssc info"
   info "Run: ssc theme list"
   info "Run: source ~/.bashrc"
@@ -165,6 +173,7 @@ info_cmd() {
   printf "Shell              : %s\n" "$SC_SHELL"
   printf "Bash               : %s\n" "${BASH_VERSION:-unknown}"
   printf "Default path       : %s\n" "$SC_DEFAULT_PATH"
+  [[ -n "${SC_WINDOWS_HOME:-}" ]] && printf "Windows home       : %s\n" "$SC_WINDOWS_HOME"
   printf "Current theme      : %s\n" "$SC_THEME"
   printf "Config             : %s\n" "$SC_CONFIG_DIR"
   printf "Starship config    : %s\n" "$SC_STARSHIP_CONFIG"
@@ -222,21 +231,21 @@ Theme manager:
   theme                   Show theme commands
   theme list              List available themes
   theme current           Show current theme
-  theme set <name>        Change theme without reinstalling
-  theme preview [name]   Preview a theme
+  theme set <name|num>    Change theme without reinstalling
+  theme preview [name]    Preview a theme
   theme reset             Reset to Tokyo Night
 
 Built-in themes:
-  tokyo-night
-  nord
-  dracula
-  gruvbox
-  catppuccin-mocha
-  minimal
+  tokyo-night         powerline   (Nerd Font)
+  nord                powerline   (Nerd Font)
+  dracula             powerline   (Nerd Font)
+  gruvbox             powerline   (Nerd Font)
+  catppuccin-mocha    powerline   (Nerd Font)
+  minimal             plain text  (any font)
 
 Notes:
-  This release supports Debian/Ubuntu via APT.
   Supported package managers: APT, Pacman, DNF, Zypper.
+  Your old starship.toml is backed up before a theme replaces it.
 EOF
 }
 
@@ -288,7 +297,7 @@ theme_menu() {
     case "$choice" in
       1) theme_list ;;
       2) theme_current ;;
-      3) ask t "Theme: " ""; theme_set "$t" || true ;;
+      3) theme_list; ask t "Theme (name or number): " ""; theme_set "$t" || true ;;
       4) ask t "Theme [current]: " "$SC_THEME"; theme_preview "$t" || true ;;
       5) theme_reset ;;
       0) return ;;
