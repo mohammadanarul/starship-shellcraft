@@ -4,7 +4,7 @@
 
 Starship Shellcraft transforms a normal Bash terminal into a modern, productive and customizable shell environment powered by **Starship**, **ble.sh**, **bash-completion**, **fzf** and **zoxide**.
 
-![Version](https://img.shields.io/badge/version-v1.3.0-blue)
+![Version](https://img.shields.io/badge/version-v1.4.0-blue)
 ![Linux](https://img.shields.io/badge/Linux-Supported-success)
 ![WSL](https://img.shields.io/badge/WSL-Supported-success)
 ![APT](https://img.shields.io/badge/APT-Supported-success)
@@ -98,7 +98,7 @@ GitHub Releases provide native packages for supported Linux distributions.
 Download the `.deb` package:
 
 ```bash
-sudo dpkg -i starship-shellcraft_1.3.0_all.deb
+sudo dpkg -i starship-shellcraft_1.4.0_all.deb
 ```
 
 Then configure the current user:
@@ -126,7 +126,7 @@ sudo apt-get install -f
 Download the `.rpm` package:
 
 ```bash
-sudo dnf install ./starship-shellcraft-1.3.0-1.noarch.rpm
+sudo dnf install ./starship-shellcraft-1.4.0-1.noarch.rpm
 ```
 
 Then:
@@ -142,7 +142,7 @@ ssc install
 The RPM package can also be installed using Zypper:
 
 ```bash
-sudo zypper install ./starship-shellcraft-1.3.0-1.noarch.rpm
+sudo zypper install ./starship-shellcraft-1.4.0-1.noarch.rpm
 ```
 
 Then:
@@ -158,7 +158,7 @@ ssc install
 Download the Arch package:
 
 ```bash
-sudo pacman -U starship-shellcraft-1.3.0-1-any.pkg.tar.zst
+sudo pacman -U starship-shellcraft-1.4.0-1-any.pkg.tar.zst
 ```
 
 Then:
@@ -348,7 +348,7 @@ Example:
 Starship Shellcraft
 ===================
 
-Version            : 1.3.0
+Version            : 1.4.0
 OS                 : Ubuntu 24.04 LTS
 Package manager    : apt
 Architecture       : x86_64
@@ -404,11 +404,33 @@ This can reinstall missing dependencies and restore the managed Bash configurati
 
 ## Update
 
-Check update information:
+Update to the latest release:
 
 ```bash
 ssc update
 ```
+
+Only check whether a new version exists:
+
+```bash
+ssc update --check
+```
+
+Reinstall the latest release:
+
+```bash
+ssc update --force
+```
+
+`ssc update` downloads the latest GitHub release and installs it in place.
+Your theme and settings are kept, and no questions are asked.
+
+If Shellcraft was installed with a package (`.deb`, `.rpm`, AUR), `ssc update`
+shows the right package-manager command instead. After a package upgrade,
+your themes are refreshed automatically the next time you open a shell.
+
+> Upgrading from v1.3.x or older? Those versions have no `ssc update` yet —
+> run the one-line installer once. From v1.4.0 on, `ssc update` is enough.
 
 ---
 
@@ -699,8 +721,9 @@ Shellcraft uses semantic versioning:
 ```text
 v1.0.0
 v1.1.0
+v1.2.0
 v1.3.0
-v1.3.0
+v1.4.0
 ```
 
 Creating a version tag triggers the GitHub Actions release workflow.
@@ -708,20 +731,20 @@ Creating a version tag triggers the GitHub Actions release workflow.
 Example:
 
 ```bash
-git tag -a v1.3.0 -m "Starship Shellcraft v1.3.0"
-git push origin v1.3.0
+git tag -a v1.4.0 -m "Starship Shellcraft v1.4.0"
+git push origin v1.4.0
 ```
 
 GitHub Actions automatically builds:
 
 ```text
-starship-shellcraft_1.3.0_all.deb
+starship-shellcraft_1.4.0_all.deb
 
-starship-shellcraft-1.3.0-1.noarch.rpm
+starship-shellcraft-1.4.0-1.noarch.rpm
 
-starship-shellcraft-1.3.0-1-any.pkg.tar.zst
+starship-shellcraft-1.4.0-1-any.pkg.tar.zst
 
-starship-shellcraft-1.3.0.tar.gz
+starship-shellcraft-1.4.0.tar.gz
 ```
 
 The generated artifacts are automatically attached to the GitHub Release.
@@ -733,7 +756,7 @@ The generated artifacts are automatically attached to the GitHub Release.
 ```text
 Git Tag
   │
-  │ v1.3.0
+  │ v1.4.0
   ▼
 GitHub Actions
   │
@@ -798,7 +821,7 @@ find . -name "*.sh" -print0 |
 Output:
 
 ```text
-starship-shellcraft_1.3.0_all.deb
+starship-shellcraft_1.4.0_all.deb
 ```
 
 ---
@@ -846,7 +869,7 @@ The build uses `makepkg` as a non-root user.
 Output:
 
 ```text
-starship-shellcraft-1.3.0.tar.gz
+starship-shellcraft-1.4.0.tar.gz
 ```
 
 ---
@@ -879,7 +902,7 @@ starship-shellcraft-1.3.0.tar.gz
 
 ## Future
 
-- [ ] Automatic self-update
+- [x] Automatic self-update (`ssc update`)
 - [ ] More built-in themes
 - [ ] Theme marketplace/repository
 - [ ] Additional Linux package managers

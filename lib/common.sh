@@ -9,6 +9,7 @@ SC_STARSHIP_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/starship.toml"
 SC_BASHRC="$HOME/.bashrc"
 SC_MARK_START="# >>> starship-shellcraft >>>"
 SC_MARK_END="# <<< starship-shellcraft <<<"
+SC_REPO="${SC_REPO:-mohammadanarul/starship-shellcraft}"
 
 info() { printf '\033[1;34m[info]\033[0m %s\n' "$*"; }
 ok() { printf '\033[1;32m[ok]\033[0m %s\n' "$*"; }
@@ -74,6 +75,18 @@ load_state() {
      ! head -n 1 "$SC_STARSHIP_CONFIG" | grep -qF "# starship-shellcraft theme:"; then
     SC_THEME="custom"
   fi
+}
+
+# Version stored in the state file (empty if never installed)
+state_version() {
+  [[ -f "$SC_STATE_FILE" ]] || return 0
+  grep '^version=' "$SC_STATE_FILE" 2>/dev/null | tail -n 1 | cut -d= -f2- || true
+}
+
+# version_gt A B  -> true if A is newer than B
+version_gt() {
+  [[ "$1" != "$2" ]] &&
+    [[ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -n 1)" == "$1" ]]
 }
 
 is_root() { [[ "${EUID:-$(id -u)}" -eq 0 ]]; }

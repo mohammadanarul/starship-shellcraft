@@ -59,6 +59,30 @@ theme_current() {
   echo "${SC_THEME:-tokyo-night}"
 }
 
+# Write a theme to ~/.config/starship.toml (no messages)
+theme_write() {
+  local requested="$1"
+  mkdir -p "$(dirname "$SC_STARSHIP_CONFIG")"
+  backup_starship_config
+  {
+    echo "$SC_THEME_MARK $requested"
+    cat "$SC_THEME_DIR/$requested.toml"
+  } > "$SC_STARSHIP_CONFIG"
+  SC_THEME="$requested"
+  save_state
+}
+
+# Re-apply the current Shellcraft theme after themes were updated.
+# Leaves a user's own (custom) config untouched.
+theme_refresh() {
+  load_state
+  if [[ "$SC_THEME" != "custom" && -f "$SC_THEME_DIR/$SC_THEME.toml" ]]; then
+    theme_write "$SC_THEME"
+  else
+    save_state
+  fi
+}
+
 theme_set() {
   local requested
   requested="$(theme_resolve "${1:-}")"
@@ -69,14 +93,7 @@ theme_set() {
     theme_list
     return 1
   fi
-  mkdir -p "$(dirname "$SC_STARSHIP_CONFIG")"
-  backup_starship_config
-  {
-    echo "$SC_THEME_MARK $requested"
-    cat "$SC_THEME_DIR/$requested.toml"
-  } > "$SC_STARSHIP_CONFIG"
-  SC_THEME="$requested"
-  save_state
+  theme_write "$requested"
   ok "Theme set to: $requested"
   if [[ "$(theme_font "$requested")" == "nerd" ]]; then
     info "This theme needs a Nerd Font in your terminal (e.g. FiraCode Nerd Font)."
