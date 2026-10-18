@@ -67,8 +67,8 @@ $SC_MARK_END"
 select_first_theme() {
   load_state
   if [[ -f "$SC_STARSHIP_CONFIG" ]]; then
-    printf "Keep current Starship theme? [Y/n]: "
-    read -r answer
+    local answer
+    ask answer "Keep current Starship theme? [Y/n]: " "y"
     if [[ ! "$answer" =~ ^[Nn]$ ]]; then
       SC_THEME="${SC_THEME:-tokyo-night}"
       save_state
@@ -79,9 +79,8 @@ select_first_theme() {
 
   echo
   theme_list
-  printf "Choose theme [tokyo-night]: "
-  read -r chosen
-  chosen="${chosen:-tokyo-night}"
+  local chosen
+  ask chosen "Choose theme [tokyo-night]: " "tokyo-night"
   if [[ ! -f "$SC_THEME_DIR/$chosen.toml" ]]; then
     warn "Invalid theme. Falling back to tokyo-night."
     chosen="tokyo-night"
@@ -181,8 +180,8 @@ update_cmd() {
 
 uninstall_cmd() {
   echo "This removes Shellcraft-managed configuration and CLI files."
-  printf "Continue? [y/N]: "
-  read -r answer
+  local answer
+  ask answer "Continue? [y/N]: " "n"
   [[ "$answer" =~ ^[Yy]$ ]] || { echo "Cancelled."; return 0; }
 
   awk -v start="$SC_MARK_START" -v end="$SC_MARK_END" '
@@ -255,8 +254,8 @@ menu_cmd() {
     echo "6) Help"
     echo "7) Uninstall"
     echo "0) Exit"
-    printf "Select: "
-    read -r choice
+    local choice
+    ask choice "Select: " "0"
     case "$choice" in
       1) install_cmd ;;
       2) theme_menu ;;
@@ -269,7 +268,8 @@ menu_cmd() {
       *) warn "Invalid option." ;;
     esac
     echo
-    read -r -p "Press Enter to continue..."
+    local _pause
+    ask _pause "Press Enter to continue..." ""
   done
 }
 
@@ -283,13 +283,13 @@ theme_menu() {
     echo "4) Preview"
     echo "5) Reset"
     echo "0) Back"
-    printf "Select: "
-    read -r choice
+    local choice t
+    ask choice "Select: " "0"
     case "$choice" in
       1) theme_list ;;
       2) theme_current ;;
-      3) printf "Theme: "; read -r t; theme_set "$t" ;;
-      4) printf "Theme [current]: "; read -r t; theme_preview "${t:-$SC_THEME}" ;;
+      3) ask t "Theme: " ""; theme_set "$t" || true ;;
+      4) ask t "Theme [current]: " "$SC_THEME"; theme_preview "$t" || true ;;
       5) theme_reset ;;
       0) return ;;
       *) warn "Invalid option." ;;

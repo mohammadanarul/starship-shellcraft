@@ -49,4 +49,11 @@ chmod +x ./shellcraft
 
 echo "==> Starting Starship Shellcraft installer..."
 
-exec ./shellcraft install "$@"
+# curl ... | bash chalale stdin = pipe, keyboard na.
+# Tai terminal (/dev/tty) theke input newar jonno stdin reattach kori.
+if [ -r /dev/tty ] && (exec </dev/tty) 2>/dev/null; then
+    exec ./shellcraft install "$@" </dev/tty
+else
+    echo "==> No interactive terminal found, using default answers."
+    exec ./shellcraft install "$@"
+fi

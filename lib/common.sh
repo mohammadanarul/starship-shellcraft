@@ -15,6 +15,24 @@ ok() { printf '\033[1;32m[ok]\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[warn]\033[0m %s\n' "$*"; }
 err() { printf '\033[1;31m[error]\033[0m %s\n' "$*" >&2; }
 
+# ask VAR "Prompt" [default]
+# Always reads from the real terminal (/dev/tty), so it works with
+# `curl ... | bash`, sudo, apt etc. Never fails under `set -e`.
+# No terminal at all (CI/non-interactive) -> uses the default.
+ask() {
+  local __var="$1" __prompt="${2:-}" __default="${3:-}" __reply=""
+  if { : </dev/tty; } 2>/dev/null; then
+    printf '%s' "$__prompt" >/dev/tty
+    IFS= read -r __reply </dev/tty || __reply=""
+  elif [[ -t 0 ]]; then
+    printf '%s' "$__prompt"
+    IFS= read -r __reply || __reply=""
+  else
+    printf '%s%s\n' "$__prompt" "$__default"
+  fi
+  printf -v "$__var" '%s' "${__reply:-$__default}"
+}
+
 ensure_dirs() {
   mkdir -p "$SC_CONFIG_DIR" "$SC_THEME_DIR" "${XDG_BIN_HOME:-$HOME/.local/bin}"
 }

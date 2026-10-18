@@ -75,7 +75,7 @@ A generic `.tar.gz` package is also provided for systems where a native package 
 The easiest way to install Shellcraft:
 
 ```bash
-curl -fsSL https://github.com/mohammadanarul/starship-shellcraft/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mohammadanarul/starship-shellcraft/main/install.sh | bash
 ```
 
 The installer automatically detects the Linux distribution and uses:
